@@ -5,8 +5,8 @@ class MoveNode
   attr_accessor :parent, :data, :child
 
   def initialize(data, parent = nil)
-    @parent = parent
     @data = data
+    @parent = parent
   end
 end
 
@@ -27,30 +27,44 @@ class Solution
     movenode = MoveNode.new(start)
     queue = []
     steps.each do |step|
-      queue.unshift([start[0] + step[0], start[1] + step[1]])
+      queue.unshift(MoveNode.new([start[0] + step[0], start[1] + step[1]]), movenode)
     end
     until movenode.data == endof
-      movenode.data = queue.pop
-      movenode.parent = MoveNode.new(movenode.data, movenode)
+      movenode = queue.pop
+   
       steps.each do |step|
-        queue.unshift([movenode.data[0] + step[0], movenode.data[1] + step[1]])
+        queue.unshift(MoveNode.new([movenode.data[0] + step[0], movenode.data[1] + step[1]], movenode))
       end
-      movenode = movenode.parent
     end
-    # variable = traversal(movenode)
-    # p variable
+    variable = traversal(movenode)
+    p variable
     puts 'We did it'
   end
 
   def traversal(node)
-    empty_array = []
-    empty_array.append(node.data)
-    return if node.parent.nil?
-
-    traversal(node.parent)
-    empty_array
+    node.parent.nil? ? [node.data] : traversal(node.parent) + [node.data]
   end
 end
 
 test = Solution.new
-test.min_knight_moves([0, 0], [2, 4])
+test.min_knight_moves([0, 0], [4, 4])
+
+=begin
+# Solution for shortest knight path to given location
+
+# First we have all the steps
+# We have a queue to store the steps
+# We have a node to store the current location
+# Every step in the queue we create a new node, that points to the parent node which was the previous location
+# We then add the new node to the queue
+# We then pop the first node in the queue and do the same thing
+# We then repeat this process until we reach the end location
+# We then return the node that is the end location
+# We then traverse the node and print the path
+
+# Create a node with the start location given
+# Do a for loop to create a node with a new location for each step, parent node as the start location, add to the queue
+# As 
+
+
+=end
